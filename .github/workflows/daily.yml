@@ -1,0 +1,69 @@
+name: daily
+
+# The autonomous loop. Runs on GitHub's servers; no local machine involved.
+on:
+  schedule:
+    - cron: "0 10 * * *"      # 06:00 America/New_York (10:00 UTC)
+  workflow_dispatch: {}        # manual trigger, for the first run and testing
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: daily
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      # Keeps first_seen history so "new today" stays meaningful across runs.
+      - name: Restore notice database
+        uses: actions/cache@v4
+        with:
+          path: 04_build/data/notices.sqlite
+          key: notices-db-${{ github.run_id }}
+          restore-keys: notices-db-
+
+      - name: Run tests
+        working-directory: 04_build
+        run: python -m unittest discover -s tests
+
+      - name: Daily cycle (ingest, filter, QA gate, render digests)
+        working-directory: 04_build
+        run: python -m engine.runner --download
+
+      - name: Publish (radars, landing pages, search pages, sitemap)
+        working-directory: 04_build
+        env:
+          EMAIL_API_KEY: ${{ secrets.EMAIL_API_KEY }}
+        run: python tools/publish.py
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: 04_build/site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+  # If this job fails, GitHub emails the repo owner. That notification is the
+  # dead-man's switch: silence means the site refreshed successfully.

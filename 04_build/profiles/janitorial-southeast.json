@@ -1,0 +1,15 @@
+{
+  "display_name": "Janitorial & Facilities — Southeast Federal Bid Alerts",
+  "trade_name": "Janitorial & Facilities Contractors",
+  "price_monthly": 29,
+  "price_annual": 199,
+  "naics_prefixes": ["561720", "561210", "561790"],
+  "psc_prefixes": ["S201", "S214"],
+  "keywords": ["janitorial", "custodial", "cleaning services", "housekeeping", "grounds maintenance", "facility maintenance", "waste removal"],
+  "exclude_keywords": [],
+  "states": ["FL", "GA", "AL", "SC", "NC", "TN", "MS", "LA"],
+  "set_asides": ["Small Business", "SDVOSB", "8(a)", "HUBZone", "Women-Owned"],
+  "notice_types": ["Solicitation", "Combined Synopsis/Solicitation", "Presolicitation", "Sources Sought"],
+  "min_score": 4,
+  "max_items": 40
+}

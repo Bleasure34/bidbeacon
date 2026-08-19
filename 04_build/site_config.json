@@ -1,0 +1,11 @@
+{
+  "brand": "BidBeacon",
+  "base_url": "",
+  "signup_url": "",
+  "checkout_url_monthly": "",
+  "checkout_url_annual": "",
+  "support_email": "",
+  "postal_line": "",
+  "operator_name": "",
+  "_comment": "Fill these once at deploy (see deploy/DEPLOY.md). Empty values make the site render in PREVIEW mode: buttons are inert and a banner says it is not live. Nothing here is secret; API keys live in GitHub Actions secrets, never in this file."
+}

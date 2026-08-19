@@ -1,0 +1,15 @@
+{
+  "display_name": "HVAC & Mechanical Contractors — Federal Bid Alerts",
+  "trade_name": "HVAC & Mechanical Contractors",
+  "price_monthly": 29,
+  "price_annual": 199,
+  "naics_prefixes": ["238220", "333415"],
+  "psc_prefixes": ["J041", "Z1", "N041"],
+  "keywords": ["hvac", "chiller", "boiler", "air handler", "heat pump", "ventilation", "air conditioning", "mechanical system", "vav", "rtu", "cooling tower", "ductwork"],
+  "exclude_keywords": ["vehicle", "aircraft"],
+  "states": [],
+  "set_asides": ["Small Business", "SDVOSB", "8(a)", "HUBZone", "Women-Owned"],
+  "notice_types": ["Solicitation", "Combined Synopsis/Solicitation", "Presolicitation", "Sources Sought"],
+  "min_score": 3,
+  "max_items": 40
+}

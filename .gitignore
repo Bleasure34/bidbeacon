@@ -1,0 +1,7 @@
+﻿04_build/data/
+04_build/out/
+04_build/site/
+04_build/outbox/
+04_build/preview.html
+__pycache__/
+*.pyc
