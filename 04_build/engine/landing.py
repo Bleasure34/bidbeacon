@@ -32,11 +32,12 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8">
  .price{{font-size:34px;font-weight:700}}
  .fine{{font-size:12px;color:var(--mut);margin-top:30px}}
  ul{{padding-left:20px}} li{{margin:6px 0}}
+{form_css}
 </style></head><body><div class="wrap">
 {preview_banner}
 <h1>{headline}</h1>
 <div class="sub">{subhead}</div>
-<a class="cta" href="{cta_href}">{cta_label}</a>
+{signup_form}
 
 <div class="band">
 <h2>What you get every morning</h2>
@@ -83,8 +84,8 @@ prepared.</p>
 </td>
 </tr>
 </table>
-<p><a class="cta" href="{checkout_href}">{checkout_label}</a>
-&nbsp;<a class="cta secondary" href="{cta_href}">{cta_label}</a></p>
+<p><a class="cta" href="{checkout_href}">{checkout_label}</a></p>
+{signup_form}
 </div>
 
 <div class="fine">Data source: SAM.gov public contract-opportunity data (public
@@ -124,6 +125,29 @@ border-radius:8px;padding:10px 14px;margin-bottom:20px;font-size:13px;color:#6b5
 <b>Preview build.</b> This page is not live: sign-up and checkout are switched
 off until the site is deployed and configured. Nothing here collects data.</div>"""
 
+SIGNUP_FORM = """<form method="post" action="{action}" class="signup">
+<input type="hidden" name="list" value="{list_name}">
+<label style="position:absolute;left:-9999px" aria-hidden="true">
+  Company <input type="text" name="company" tabindex="-1" autocomplete="off">
+</label>
+<input type="email" name="email" required placeholder="you@yourcompany.com"
+       aria-label="Your email address">
+<button type="submit">Get the free digest</button>
+</form>
+<div class="formnote">Free, daily. One click to unsubscribe. We send the digest
+and nothing else.</div>"""
+
+INERT_FORM = """<a class="cta" href="#">Sign-up opens at launch</a>"""
+
+FORM_CSS = """
+ .signup{{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px}}
+ .signup input[type=email]{{flex:1;min-width:230px;padding:11px 13px;font-size:15px;
+ border:1px solid #cfd6e4;border-radius:8px;font-family:inherit}}
+ .signup button{{background:#1f5eff;color:#fff;border:0;padding:11px 22px;
+ border-radius:8px;font-weight:600;font-size:15px;cursor:pointer;font-family:inherit}}
+ .formnote{{font-size:12px;color:#5b6474;margin-bottom:6px}}
+"""
+
 
 def render_landing(profile, rows, day, brand=None, radar_rows=None, cfg=None):
     cfg = cfg or config.load()
@@ -149,16 +173,22 @@ def render_landing(profile, rows, day, brand=None, radar_rows=None, cfg=None):
         if bits:
             identity = " Operated by " + " · ".join(html.escape(b) for b in bits) + "."
 
+    signup_form = (
+        SIGNUP_FORM.format(action=html.escape(cfg.get("signup_url") or ""),
+                           list_name=html.escape(profile.get("name", "default")))
+        if live else INERT_FORM
+    )
+
     return PAGE.format(
         title=html.escape(f"{name} — {brand}"),
         preview_banner="" if live else PREVIEW_BANNER,
+        form_css=FORM_CSS,
+        signup_form=signup_form,
         headline=html.escape(name),
         subhead=html.escape(profile.get(
             "subhead",
             "Stop refreshing SAM.gov. Get every new federal opportunity in your "
             "trade, filtered and delivered by 7am.")),
-        cta_href=html.escape(cfg.get("signup_url") or "#"),
-        cta_label=html.escape("Get the free digest" if live else "Sign-up opens at launch"),
         identity_line=identity,
         # Never expose a live checkout before delivery works: taking $29 for a
         # digest we cannot yet send is the one failure with a real victim.
