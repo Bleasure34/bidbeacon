@@ -2,10 +2,10 @@
   "brand": "BidBeacon",
   "base_url": "",
   "signup_url": "",
-  "checkout_url_monthly": "",
+  "checkout_url_monthly": "https://buy.stripe.com/14AbJ33Xi56F6rZ3Og2Nq07",
   "checkout_url_annual": "",
   "support_email": "",
   "postal_line": "",
-  "operator_name": "",
-  "_comment": "Fill these once at deploy (see deploy/DEPLOY.md). Empty values make the site render in PREVIEW mode: buttons are inert and a banner says it is not live. Nothing here is secret; API keys live in GitHub Actions secrets, never in this file."
+  "operator_name": "Leasure Digital",
+  "_comment": "base_url stays empty until the subdomain's DNS actually resolves - setting it early writes a CNAME file that breaks the working github.io site. Checkout is deliberately inert until signup_url and support_email are also set, so we can never charge for a digest we cannot deliver. Secrets live in GitHub Actions secrets, never here."
 }

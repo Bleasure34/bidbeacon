@@ -160,9 +160,12 @@ def render_landing(profile, rows, day, brand=None, radar_rows=None, cfg=None):
         cta_href=html.escape(cfg.get("signup_url") or "#"),
         cta_label=html.escape("Get the free digest" if live else "Sign-up opens at launch"),
         identity_line=identity,
-        checkout_href=html.escape(cfg.get("checkout_url_monthly") or "#"),
+        # Never expose a live checkout before delivery works: taking $29 for a
+        # digest we cannot yet send is the one failure with a real victim.
+        checkout_href=html.escape(
+            cfg.get("checkout_url_monthly") if (live and config.can_charge(cfg)) else "#"),
         checkout_label=html.escape(
-            "Subscribe to the Radar" if config.can_charge(cfg)
+            "Subscribe to the Radar" if (live and config.can_charge(cfg))
             else "Radar opens at launch"),
         region_phrase=html.escape(region_phrase),
         day=day, sample_items=items,
