@@ -67,3 +67,4 @@ jobs:
 
   # If this job fails, GitHub emails the repo owner. That notification is the
   # dead-man's switch: silence means the site refreshed successfully.
+# workflow registered 2026-08-19
